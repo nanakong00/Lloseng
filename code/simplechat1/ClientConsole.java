@@ -41,11 +41,11 @@ public class ClientConsole implements ChatIF
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  public ClientConsole(String host, int port)
+  public ClientConsole(String loginID,String host, int port)
   {
     try
     {
-      client= new ChatClient(host, port, this);
+      client= new ChatClient(loginID,host, port, this);
     }
     catch(IOException exception)
     {
