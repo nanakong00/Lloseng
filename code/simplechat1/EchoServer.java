@@ -52,6 +52,60 @@ public class EchoServer extends AbstractServer
     this.sendToAllClients(msg);
   }
 
+
+  public void handleMessageFromServerUI(String message)
+{
+  if (message.startsWith("#")) {
+    String[] cmd = message.split(" ");
+    switch (cmd[0]) {
+      case "#quit":
+        try {
+          close();
+          System.out.println("Connection terminated.");
+        } catch (IOException e) {
+          System.exit(0);
+        }
+        break;
+      case "#stop":
+        this.sendToAllClients("Server has stopped listening for new clients.");
+        this.stopListening();
+        break;
+      case "#close":
+        try {
+          this.close();
+          System.out.println("Connection terminated.");
+        } catch (IOException e) {
+          System.out.println("Unable to terminate connection.");
+        }
+        break;
+      case "#setport":
+        if (!isListening()) {
+          this.setPort(Integer.parseInt(cmd[1]));
+          System.out.println("New port has been set.");
+        } else {
+          System.out.println("Server must be closed.");
+        }
+        break;
+      case "#start":
+        if (!isListening()) {
+          try {
+            this.listen();
+          } catch (IOException e) {
+            System.out.println("Error to listen");
+          }
+        } else {
+          System.out.println("Server must be stopped.");
+        }
+        break;
+      case "#getport":
+        System.out.println("Current port: " + this.getPort());
+        break;
+    }
+  } else {
+      this.sendToAllClients("SERVER MSG> " + message);
+    }
+  }
+
   /**
    * This method overrides the one in the superclass.  Called
    * when the server starts listening for connections.
