@@ -104,12 +104,20 @@ public class ClientConsole implements ChatIF
    */
   public static void main(String[] args)
   {
+    String loginID = "";
     String host = "";
     int port = 0;  //The port number
 
+    try{
+      loginID = args[0];
+    }catch (ArrayIndexOutOfBoundsException e){
+      System.out.println("ERROR - No login ID specified. Connection aborted.");
+      System.exit(0);
+    }
+
     try
     {
-      host = args[0];
+      host = args[1];
     }
     catch(ArrayIndexOutOfBoundsException e)
     {
@@ -117,13 +125,13 @@ public class ClientConsole implements ChatIF
     }
     // e5b
     try {
-      port = Interger.parseInt(args[1]);
+      port = Interger.parseInt(args[2]);
     }catch(ArrayIndexOutOfBoundsException e){
       port = DEFAULT_PORT;
     }
 
 
-    ClientConsole chat= new ClientConsole(host, DEFAULT_PORT);
+    ClientConsole chat= new ClientConsole(loginID,host,port);
     chat.accept();  //Wait for console data
   }
 }
