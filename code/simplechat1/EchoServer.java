@@ -48,6 +48,33 @@ public class EchoServer extends AbstractServer
   public void handleMessageFromClient
     (Object msg, ConnectionToClient client)
   {
+    if (msg.toString().startsWith("#login")) {
+      String[] message = msg.toString().split(" ");
+      if (message.length != 0) {
+        if (client.getInfo("loginID") == null) {
+          client.setInfo("loginID", message[1]);
+          this.sendToAllClients(client.getInfo("loginID") + " has logged on.");
+        } else {
+          try {
+            client.sendToClient("Username cannot be changed.");
+          } catch (IOException e) {
+            //
+          }
+        }
+      }
+    } else {
+      if (client.getInfo("loginID") == null) {
+        try {
+          client.sendToClient("Error: No username provided.");
+          client.close();
+        } catch (IOException e) {
+          //
+        }
+      } else {
+        System.out.println("Message received: " + msg + " from " + client.getInfo("loginID"));
+        this.sendToAllClients(client.getInfo("loginID") + "> " + msg);
+      }
+    }
     System.out.println("Message received: " + msg + " from " + client);
     this.sendToAllClients(msg);
   }
